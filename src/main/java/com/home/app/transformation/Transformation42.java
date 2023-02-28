@@ -2,10 +2,10 @@ package com.home.app.transformation;
 
 import java.io.File;
 
-public class EightSix extends FileTransformation {
+public class Transformation42 extends FileTransformation {
 
-    public EightSix() {
-        super("\\d{8}_\\d{6}\\.jpg");
+    public Transformation42() {
+        super("\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\\..*");
     }
 
     @Override
