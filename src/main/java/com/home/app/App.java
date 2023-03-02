@@ -7,10 +7,11 @@ import com.home.app.matcher.JpegFileMatcher;
 import com.home.app.matcher.JpgFileMatcher;
 import com.home.app.matcher.Mp4FileMatcher;
 import com.home.app.matcher.PngFileMatcher;
-import com.home.app.transformation.FileTransformation;
-import com.home.app.transformation.Transformation42;
-import com.home.app.transformation.Transformation86;
-import com.home.app.transformation.Transformation86Bracket;
+import com.home.app.normalizer.FileNormalizer;
+import com.home.app.normalizer.FileNormalizer42;
+import com.home.app.normalizer.FileNormalizer86;
+import com.home.app.normalizer.FileNormalizer86Bracket;
+import com.home.app.normalizer.FileNormalizerWp62;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,13 +42,15 @@ public class App {
         return files;
     }
 
-    private static void printAll(String dir, FileMatcher mather) {
+    private static void printAll(String dir, FileMatcher mather, boolean printFiles) {
         var files = listFiles(dir, mather);
 
         var distinctFiles = new HashSet<String>();
 
         for (var file : files) {
-//                System.out.println(file.getName());
+            if (printFiles) {
+                System.out.println(file.getName());
+            }
             distinctFiles.add(file.getName());
         }
 
@@ -58,10 +61,40 @@ public class App {
         System.out.println(distinctFiles.size());
     }
 
+    private static void transformAll(String dir, FileNormalizer transformator, boolean printFiles) {
+        var files = listFiles(dir, transformator);
+        var total = files.size();
+        var counter = 0;
+
+        for (var file : files) {
+            System.out.println(file.getName());
+            var oldName = file.getName().toLowerCase();
+            var newName = transformator.getNewName(file);
+            var oldFullName = file.getAbsolutePath();
+            var newFullName = oldFullName.replace(oldName, newName);
+
+            if (printFiles) {
+                System.out.print(oldName);
+                System.out.print(" -> ");
+                System.out.println(newName);
+            }
+
+//            var success = file.renameTo(new File(newFullName));
+//            if (success) {
+//                counter++;
+//            }
+        }
+
+        System.out.print(counter);
+        System.out.print("/");
+        System.out.println(total);
+    }
+
     public static void main(String[] args) {
         System.out.println("Hello World!");
 
         var dir = "/home/kirill/Yandex/Photos";
+//        var dir = "/home/kirill/test";
 //        var pattern = "WP_\\d{6}_\\d{2}_\\d{2}_\\d{2}_Pro\\.jpg";
 //        var pattern = "WP_20170411_17_44_48_Pro.jpg";
 //        var pattern = "WP_\\d{6}_\\d{3}\\.jpg";
@@ -76,16 +109,23 @@ public class App {
         mathers.add(new GifFileMatcher());
 
         for (var m : mathers) {
-            printAll(dir, m);
+            printAll(dir, m, false);
         }
 
-        var transformations = new ArrayList<FileTransformation>();
-        transformations.add(new Transformation86());
-        transformations.add(new Transformation86Bracket());
-        transformations.add(new Transformation42());
+        System.out.println();
+
+        var transformations = new ArrayList<FileNormalizer>();
+        transformations.add(new FileNormalizer86());
+//        transformations.add(new FileNormalizer86Bracket());
+//        transformations.add(new FileNormalizer42());
+//        transformations.add(new FileNormalizerWp62());
 
         for (var t : transformations) {
-            printAll(dir, t);
+//            printAll(dir, t, true);
+//            printAll(dir, new FileNormalizer42());
+            transformAll(dir, t, true);
+//            printAll(dir, t);
+//            printAll(dir, new FileNormalizer42());
         }
 
 //        for (var s : transformations) {
