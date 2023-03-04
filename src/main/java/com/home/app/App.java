@@ -1,19 +1,18 @@
 package com.home.app;
 
+import com.home.app.normalizer.FileNormalizer42All;
 import com.home.app.matcher.AllFileMatcher;
 import com.home.app.matcher.FileMatcher;
-import com.home.app.matcher.GifFileMatcher;
-import com.home.app.matcher.JpegFileMatcher;
-import com.home.app.matcher.JpgFileMatcher;
-import com.home.app.matcher.Mp4FileMatcher;
-import com.home.app.matcher.PngFileMatcher;
+import com.home.app.matcher.data.FileMatcher42;
+import com.home.app.matcher.data.FileMatcher42All;
+import com.home.app.matcher.data.FileMatcherWp82;
+import com.home.app.matcher.type.GifFileMatcher;
+import com.home.app.matcher.wrapper.InvertedFileMatcherWrapper;
+import com.home.app.matcher.type.JpegFileMatcher;
+import com.home.app.matcher.type.JpgFileMatcher;
+import com.home.app.matcher.type.Mp4FileMatcher;
+import com.home.app.matcher.type.PngFileMatcher;
 import com.home.app.normalizer.FileNormalizer;
-import com.home.app.normalizer.FileNormalizer42;
-import com.home.app.normalizer.FileNormalizer86;
-import com.home.app.normalizer.FileNormalizer86Bracket;
-import com.home.app.normalizer.FileNormalizerImg4Jpg;
-import com.home.app.normalizer.FileNormalizerWp82;
-import com.home.app.normalizer.FileNormalizerMeta;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -72,21 +71,13 @@ public class App {
     }
 
     private static void transformAll(String dir, FileNormalizer transformator, boolean printFiles) {
-        var files = listFiles(dir, transformator);
+        var files = listFiles(dir, (FileMatcher) transformator);
         var total = files.size();
         var counter = 0;
 
         var distinctFiles = new HashMap<String, Integer>();
 
-        FileMatcher fileMather = new AllFileMatcher();
-
         for (var file : files) {
-            System.out.println(file.getName());
-
-            if (!fileMather.isMatch(file)) {
-                continue;
-            }
-
             var oldName = file.getName().toLowerCase();
             var fileTimestamp = transformator.getTimestamp(file);
             if (fileTimestamp == null) {
@@ -97,6 +88,9 @@ public class App {
                 }
                 continue;
             }
+
+//            var newName = oldName.toLowerCase().replace("-", "").replace(" ", "_");
+//            var oldFullName = file.getAbsolutePath();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
             var fileExtension = oldName.split("\\.")[1];
@@ -134,20 +128,19 @@ public class App {
     }
 
     public static void main(String[] args) {
-        var dir = "/home/kirill/Yandex/Photos/Свадьба";
+        var dir = "/home/kirill/Yandex/Photos";
 
         var mathers = new ArrayList<FileMatcher>();
 
-//        mathers.add(new AllFileMatcher());
+        mathers.add(new AllFileMatcher());
         mathers.add(new JpgFileMatcher());
         mathers.add(new JpegFileMatcher());
         mathers.add(new PngFileMatcher());
         mathers.add(new Mp4FileMatcher());
         mathers.add(new GifFileMatcher());
-        mathers.add(new FileNormalizer86());
-        mathers.add(new FileNormalizer86Bracket());
-        mathers.add(new FileNormalizer42());
-        mathers.add(new FileNormalizerWp82());
+        mathers.add(new FileMatcher42());
+        mathers.add(new FileMatcher42All());
+        mathers.add(new FileMatcherWp82());
 
         for (var m : mathers) {
             printAll(dir, m, false);
@@ -155,18 +148,22 @@ public class App {
 
         System.out.println();
 
+        printAll(dir, new InvertedFileMatcherWrapper(new FileMatcher42All()), true);
+
+        System.out.println();
+
         var transformations = new ArrayList<FileNormalizer>();
 //        transformations.add(new FileNormalizer86());
 //        transformations.add(new FileNormalizer86Bracket());
 //        transformations.add(new FileNormalizer42());
+        transformations.add(new FileNormalizer42All());
 //        transformations.add(new FileNormalizerWp82());
-        transformations.add(new FileNormalizerMeta());
+//        transformations.add(new FileNormalizerWp82());
 //        transformations.add(new FileNormalizerImg4Jpg());
+//        transformations.add(new FileNormalizerMeta(new InlineFileMatcher("(?!skip).*", new InvertedFileMatcherWrapper(new FileMatcher42All()))));
 
         for (var t : transformations) {
-            printAll(dir, new FileNormalizer42(), false);
             transformAll(dir, t, true);
-            printAll(dir, new FileNormalizer42(), false);
         }
     }
 }

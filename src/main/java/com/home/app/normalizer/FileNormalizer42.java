@@ -1,13 +1,19 @@
 package com.home.app.normalizer;
 
+import com.home.app.matcher.FileMatcher;
+import com.home.app.matcher.data.FileMatcher42;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class FileNormalizer42 extends FileNormalizer {
+public class FileNormalizer42 extends FileMatcher42 implements FileNormalizer {
 
-    public FileNormalizer42() {
-        super("\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\\..*");
+    public FileNormalizer42(){
+        this(null);
+    }
+    
+    public FileNormalizer42(FileMatcher matcher){
+        super(matcher);
     }
     
     @Override

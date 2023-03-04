@@ -1,9 +1,12 @@
-package com.home.app.normalizer;
+package com.home.app.normalizer.meta;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
+import com.home.app.matcher.FileMatcher;
+import com.home.app.matcher.data.FileMatcherMeta;
+import com.home.app.normalizer.FileNormalizer;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -12,14 +15,14 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FileNormalizerMeta extends FileNormalizer {
+public class FileNormalizerMeta extends FileMatcherMeta implements FileNormalizer {
 
     public FileNormalizerMeta() {
-        super(".*\\.(jpg|jpeg|png)");
+        this(null);
     }
 
-    public FileNormalizerMeta(String pattern) {
-        super(pattern);
+    public FileNormalizerMeta(FileMatcher matcher) {
+        super(matcher);
     }
 
     @Override
