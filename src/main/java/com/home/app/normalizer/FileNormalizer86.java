@@ -1,22 +1,23 @@
 package com.home.app.normalizer;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class FileNormalizer86 extends FileNormalizer {
 
     public FileNormalizer86() {
-        super("\\d{8}_\\d{6}");
+        super("\\d{8}_\\d{6}\\..*");
     }
     
     @Override
-    public String getNewName(File file) {
+    public LocalDateTime getTimestamp(File file) {
         var oldName = file.getName().toLowerCase();
+        oldName = oldName.substring(0, 15);
         
-        var newName = new StringBuilder();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+        LocalDateTime dateTime = LocalDateTime.parse(oldName, formatter);
 
-        newName.append(oldName.substring(0, 8));
-        newName.append(oldName.substring(9));
-
-        return newName.toString();
+        return dateTime;
     }
 }

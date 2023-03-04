@@ -2,6 +2,7 @@ package com.home.app;
 
 import com.home.app.normalizer.FileNormalizer42;
 import java.io.File;
+import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -44,18 +45,24 @@ public class FileNormalizer42Test {
     @Test
     @DisplayName("Correct normalized name - jpg")
     void testGetNewNameTrueJpg() {
-        assertEquals("20190905152321.jpg", normalizer.getNewName(new File("2019-09-05_15-23-21.jpg")));
+        var expected = LocalDateTime.of(2019, 9, 5, 15, 23, 21);
+        var actual = normalizer.getTimestamp(new File("2019-09-05 15-23-21.jpg"));
+        assertEquals(expected, actual);
     }
     
     @Test
     @DisplayName("Correct normalized name - jpeg")
     void testGetNewNameTrueJpeg() {
-        assertEquals("20190905152321.jpeg", normalizer.getNewName(new File("2019-09-05_15-23-21.jpeg")));
+        var expected = LocalDateTime.of(2019, 9, 5, 15, 23, 21);
+        var actual = normalizer.getTimestamp(new File("2019-09-05 15-23-21.jpeg"));
+        assertEquals(expected, actual);
     }
     
     @Test
     @DisplayName("Correct normalized name - png")
     void testGetNewNameTruePng() {
-        assertEquals("20190905152321.png", normalizer.getNewName(new File("2019-09-05_15-23-21.png")));
+        var expected = LocalDateTime.of(2019, 9, 5, 15, 23, 21);
+        var actual = normalizer.getTimestamp(new File("2019-09-05 15-23-21.png"));
+        assertEquals(expected, actual);
     }
 }

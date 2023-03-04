@@ -4,18 +4,18 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class FileNormalizer42 extends FileNormalizer {
+public class FileNormalizerWp82 extends FileNormalizer {
 
-    public FileNormalizer42() {
-        super("\\d{4}-\\d{2}-\\d{2} \\d{2}-\\d{2}-\\d{2}\\..*");
+    public FileNormalizerWp82() {
+        super("wp_\\d{8}_\\d{2}_\\d{2}_\\d{2}_pro\\..*");
     }
     
     @Override
     public LocalDateTime getTimestamp(File file) {
         var oldName = file.getName().toLowerCase();
-        oldName = oldName.substring(0, 19);
+        oldName = oldName.substring(3, 20);
         
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HH_mm_ss");
         LocalDateTime dateTime = LocalDateTime.parse(oldName, formatter);
 
         return dateTime;
