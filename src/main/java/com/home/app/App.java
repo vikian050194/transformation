@@ -1,26 +1,10 @@
 package com.home.app;
 
-import com.home.app.normalizer.FileNormalizer42All;
-import com.home.app.matcher.AllFileMatcher;
-import com.home.app.matcher.FileMatcher;
-import com.home.app.matcher.data.FileMatcher14;
-import com.home.app.matcher.data.FileMatcher42;
-import com.home.app.matcher.data.FileMatcher42All;
-import com.home.app.matcher.data.FileMatcher86;
-import com.home.app.matcher.data.FileMatcher86All;
-import com.home.app.matcher.data.FileMatcher86Brackets;
-import com.home.app.matcher.data.FileMatcherWp82;
-import com.home.app.matcher.type.GifFileMatcher;
+import com.home.app.matcher.*;
+import com.home.app.matcher.data.*;
+import com.home.app.matcher.type.*;
 import com.home.app.matcher.wrapper.InvertedFileMatcherWrapper;
-import com.home.app.matcher.type.JpegFileMatcher;
-import com.home.app.matcher.type.JpgFileMatcher;
-import com.home.app.matcher.type.Mp4FileMatcher;
-import com.home.app.matcher.type.PngFileMatcher;
-import com.home.app.normalizer.FileNormalizer;
-import com.home.app.normalizer.FileNormalizer14;
-import com.home.app.normalizer.FileNormalizer42;
-import com.home.app.normalizer.FileNormalizer86;
-import com.home.app.normalizer.FileNormalizer86All;
+import com.home.app.normalizer.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,7 +21,7 @@ import java.util.stream.Stream;
 
 public class App {
 
-    private static HashMap<String, Integer> distinctFiles = new HashMap<>();
+    private static final HashMap<String, Integer> distinctFiles = new HashMap<>();
 
     public static List<File> listFiles(String dir, FileMatcher fileMather) {
         var files = new ArrayList<File>();
@@ -136,7 +120,7 @@ public class App {
     }
 
     public static void main(String[] args) {
-        var dir = "/home/kirill/Yandex/Photos";
+        var dir = args[0];
 
         var mathers = new ArrayList<FileMatcher>();
 
@@ -160,7 +144,7 @@ public class App {
 
         System.out.println();
 
-//        printAll(dir, new InvertedFileMatcherWrapper(new FileMatcher86All()), true);
+        printAll(dir, new InvertedFileMatcherWrapper(new FileMatcher86All()), true);
 
         System.out.println();
 
