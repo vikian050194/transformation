@@ -3,7 +3,7 @@ package com.home.app.matcher;
 import java.io.File;
 import java.util.regex.Pattern;
 
-public class FileMatcher {
+public abstract class FileMatcher {
 
     private final Pattern pattern;
     protected final FileMatcher matcher;
